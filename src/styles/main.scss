@@ -1,0 +1,13 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+// Импорты стилей для блоков
+@import '@/styles/Components/HeaderComponent.scss';
+
+// импорты стилей для страниц
+@import '@/styles/PagesStyles/MainPage.scss';
+
+// Импорты стилей для UI компонентов
