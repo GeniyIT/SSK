@@ -2,7 +2,7 @@
     <div class="characteristics-modal">
         <div class="characteristics-container">
             <h1 class="characteristics__title" v-if="formattedCharacteristics.length">Характеристики товара:</h1>
-            <h1 v-if="!formattedCharacteristics.length">Характеристики для этого товара отсутствуют</h1>
+            <h1 class="characteristics__title" v-if="!formattedCharacteristics.length">Характеристики для этого товара отсутствуют</h1>
             <article class="characteristics-card" v-else v-for="(characteristic, index) in formattedCharacteristics" :key="index">
                 <h1>{{ characteristic.key }}</h1>
                 <p>{{ characteristic.value }}</p>

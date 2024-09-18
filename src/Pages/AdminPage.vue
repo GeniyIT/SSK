@@ -8,6 +8,7 @@
                     <li class="admin-header__nav-item" @click="buttonHandler('removeProducts')"><a class="admin-header__nav-button-">Удаление товаров</a></li>
                     <li class="admin-header__nav-item" @click="buttonHandler('addProducts')"><a class="admin-header__nav-button-">Добавление товаров</a></li>
                     <li class="admin-header__nav-item" @click="modalStates.ModalToggle('changePassword')"><a class="admin-header__nav-button-">Сменить пароль</a></li>
+                    <li class="admin-header__nav-item" @click="buttonHandler('exit')"><a class="admin-header__nav-button-">Выход</a></li>
                 </ul>
             </nav>
         </header>
@@ -103,8 +104,6 @@ const description = ref('')
 const characteristics = ref([{ key: '', value: '' }])
 const price = ref(0)
 
-const searchProducts = ref('')
-
 const allProducts = ref([])
 const allFeedback = ref([])
 
@@ -159,19 +158,33 @@ const getFeedback = async () => {
             date: formatDate(form.date)
         }))
     } catch (error) {
-        console.error(error)
+        if (error.response && error.response.data && error.response.status === 401) {
+            console.error('Ошибка авторизации: токен недействителен или отсутствует')
+            localStorage.removeItem('token')
+            await router.push('/login')
+        }
+        else {
+            console.error('Произошла ошибка:', error)
+        }
     }
 }
 
 const getProducts = async () => {
     try {
-        const response = await axios.get('http://localhost:5000/products')
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/products`)
         allProducts.value = response.data.map(product => ({
             ...product,
             characteristics: formatCharacteristics(product.characteristics)
         }))
     } catch (error) {
-        console.error('Ошибка при загрузке данных:', error)
+        if (error.response && error.response.data && error.response.status === 401) {
+            console.error('Ошибка авторизации: токен недействителен или отсутствует')
+            localStorage.removeItem('token')
+            await router.push('/login')
+        }
+        else {
+            console.error('Произошла ошибка:', error)
+        }
     }
 }
 
@@ -179,7 +192,7 @@ const onSubmit = async () => {
     const formData = new FormData()
     formData.append('image', imageFile.value)
 
-    const responseImage = await axios.post('http://localhost:5000/upload/image', formData, {
+    const responseImage = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/upload/image`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
@@ -188,19 +201,30 @@ const onSubmit = async () => {
 
     const characteristicsArray = characteristics.value.map(char => `${char.key}: ${char.value}`)
 
-    await axios.post('http://localhost:5000/products/add', {
-        title: title.value,
-        imageUrl: imageFile.value,
-        description: description.value,
-        characteristics: characteristicsArray,
-        price: price.value
-    },
-        {
-            headers: {
-                Authorization: 'Bearer ' + localStorage.getItem('token')
-            }
-        })
-    resetForm()
+    try {
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/products/add`, {
+                title: title.value,
+                imageUrl: imageFile.value,
+                description: description.value,
+                characteristics: characteristicsArray,
+                price: price.value
+            },
+            {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+        resetForm()
+    } catch (error) {
+        if (error.response && error.response.data && error.response.status === 401) {
+            console.error('Ошибка авторизации: токен недействителен или отсутствует')
+            localStorage.removeItem('token')
+            await router.push('/login')
+        }
+        else {
+            console.error('Произошла ошибка:', error)
+        }
+    }
 }
 
 const handleFileUpload = (event) => {
@@ -214,6 +238,9 @@ const buttonHandler = (btnName) => {
     } else if (btnName === 'feedback') {
         getFeedback()
         page.value = btnName
+    } else if (btnName === 'exit') {
+        localStorage.removeItem('token')
+        router.push('/login')
     }
     else{
         page.value = btnName
@@ -230,36 +257,53 @@ const resetForm = () => {
 
 const isCheckReply = async (id, checkReplyStatus) => {
     if (!checkReplyStatus) {
-        await axios.post('http://localhost:5000/feedbackForms/setReplyTrueForm', {
-            id: id
-        },
-            {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
+        try {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/feedbackForms/setReplyTrueForm`, {
+                    id: id
+                },
+                {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token')
+                    }
                 }
+            )
+            await getFeedback()
+        } catch (error) {
+            if (error.response && error.response.data && error.response.status === 401) {
+                console.error('Ошибка авторизации: токен недействителен или отсутствует')
+                localStorage.removeItem('token')
+                await router.push('/login')
             }
-        )
-        await getFeedback()
-
+            else {
+                console.error('Произошла ошибка:', error)
+            }
+        }
     }
     else {
-        await axios.post('http://localhost:5000/feedbackForms/setReplyFalseForm', {
-            id: id
-        },
-            {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
-            })
-        await getFeedback()
+        try {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/feedbackForms/setReplyFalseForm`, {
+                    id: id
+                },
+                {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token')
+                    }
+                })
+            await getFeedback()
+        } catch (error) {
+            if (error.response && error.response.data && error.response.status === 401) {
+                console.error('Ошибка авторизации: токен недействителен или отсутствует')
+                localStorage.removeItem('token')
+                await router.push('/login')
+            }
+            else {
+                console.error('Произошла ошибка:', error)
+            }
+        }
     }
 }
 
 onMounted(() => {
     getFeedback()
-    if (localStorage.getItem('token') === null) {
-        router.push('/login')
-    }
-    console.log(import.meta.env.VITE_BACKEND_URL)
 })
 </script>

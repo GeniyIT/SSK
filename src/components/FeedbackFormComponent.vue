@@ -23,7 +23,7 @@ const textArea = ref('')
 const isSend = ref(false)
 
 const btnHandler = (() => {
-    axios.post('http://localhost:5000/feedbackForms/create', {
+    axios.post(`${import.meta.env.VITE_BACKEND_URL}/feedbackForms/create`, {
         name: name.value,
         phone: phone.value,
         text: textArea.value,

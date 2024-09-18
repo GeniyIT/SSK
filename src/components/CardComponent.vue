@@ -9,7 +9,7 @@
     <div class="card">
         <div class="card-wrapper" v-for="product in filteredProducts" :key="product.id">
             <figure class="card-image">
-                <img class="card-img" :src="'http://localhost:5000' + product.imageUrl" alt="product image">
+                <img class="card-img" :src="`${backendUrl}${product.imageUrl}`" alt="product image">
             </figure>
             <h3 class="card-title">{{ product.title }}</h3>
             <div class="card-description">{{ product.description }}</div>
@@ -51,7 +51,7 @@ import axios from "axios";
 import router from "@/router/index.js";
 import CharacteristicsModal from "@/modals/CharacteristicsModal.vue";
 
-
+const backendUrl = import.meta.env.VITE_BACKEND_URL
 const modalStates = useModalStatesStore()
 const currentProductId = ref(null)
 const currentProduct = ref({})
@@ -77,7 +77,7 @@ const formatCharacteristics = (characteristicsArray) => {
 
 const getProducts = async () => {
     try {
-        const response = await axios.get('http://localhost:5000/products')
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/products`)
         allProducts.value = await response.data.map(product => ({
             ...product,
             characteristics: formatCharacteristics(product.characteristics)
@@ -103,14 +103,25 @@ const openModal = (name, product) => {
 }
 
 const removeProducts = async (id) => {
-    await axios.post('http://localhost:5000/products/remove', {
-        idProduct: id
-    }, {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token')
+    try {
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/products/remove`, {
+            idProduct: id
+        }, {
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+        await getProducts()
+    } catch (error) {
+        if (error.response && error.response.data && error.response.status === 401) {
+            console.error('Ошибка авторизации: токен недействителен или отсутствует')
+            localStorage.removeItem('token')
+            await router.push('/login')
         }
-    })
-    await getProducts()
+        else {
+            console.error('Произошла ошибка:', error)
+        }
+    }
 }
 
 const filteredProducts = computed(() => {

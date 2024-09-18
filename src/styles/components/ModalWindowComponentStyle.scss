@@ -16,7 +16,6 @@
   min-width: 720px;
   max-width: 920px;
   margin-inline: auto ;
-  // height: 250px;
   border-radius: 16px;
   background-color: rgb(253, 253, 253);
 
@@ -38,4 +37,15 @@
   width: 24px;
   height: 24px;
   cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .modal{
+    padding: 10px;
+  }
+
+  .modal__content{
+    min-width: auto;
+    max-width: 100%;
+  }
 }

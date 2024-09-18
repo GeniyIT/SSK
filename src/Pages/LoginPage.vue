@@ -22,25 +22,22 @@ const login = ref('')
 const pass = ref('')
 
 const onSubmit = async () => {
-    const response = await axios.post('http://localhost:5000/user', {
-        login: login.value,
-        password: pass.value
-    })
-    localStorage.setItem('token', response.data.token)
-    if (localStorage.getItem('token') !== null) {
-        await router.push('/admin')
-    } else {
-        await router.push('/')
+    try {
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user`, {
+            login: login.value,
+            password: pass.value
+        })
+        if (response.data.message === undefined) {
+            localStorage.setItem('token', response.data.token)
+            await router.push('/admin')
+        }
+    }catch(err) {
+        console.error(err)
     }
 }
 
 onMounted(async () => {
-    const response = await axios.get('http://localhost:5000/feedbackForms', {
-        headers: {
-            authorization: 'Bearer ' + localStorage.getItem('token')
-        }
-    })
-    if (response.data.forms.length > 0) {
+    if (localStorage.getItem('token')) {
         await router.push('/admin')
     }
 })

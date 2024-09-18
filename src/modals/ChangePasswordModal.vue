@@ -15,6 +15,7 @@
 import {ref} from "vue";
 import axios from "axios";
 import {useModalStatesStore} from "@/Store/modalStates.js";
+import router from "@/router/index.js";
 
 const modalStates = useModalStatesStore()
 
@@ -25,7 +26,7 @@ const statusPassword = ref(true)
 const onSubmit = async () => {
     if(newPassword.value === repeatPassword.value) {
         try {
-            const response = await axios.post('http://localhost:5000/user/changePassword', {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/changePassword`, {
                     newPassword: newPassword.value
                 },
                 {
@@ -35,7 +36,14 @@ const onSubmit = async () => {
                 })
             modalStates.ModalToggle('')
         } catch (error) {
-            console.log(error)
+            if (error.response && error.response.data && error.response.status === 401) {
+                console.error('Ошибка авторизации: токен недействителен или отсутствует')
+                localStorage.removeItem('token')
+                await router.push('/login')
+            }
+            else {
+                console.error('Произошла ошибка:', error)
+            }
         }
 
     } else {

@@ -25,6 +25,9 @@
 }
 
 .characteristics-container{
+  h1{
+
+  }
   @include flexCol();
   gap: 15px;
 }
@@ -51,4 +54,19 @@
 .characteristics-modal button:active{
   background-color: white;
   color: black;
+}
+
+@media (max-width: 480px) {
+  .characteristics__title {
+    font-size: 20px;
+  }
+
+  .characteristics-card{
+    h1{
+      font-size: 18px;
+    }
+    p{
+      font-size: 16px;
+    }
+  }
 }

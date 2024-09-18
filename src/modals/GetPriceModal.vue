@@ -2,7 +2,7 @@
     <div class="get-call">
         <article class="get-call__text">
             <figure class="get-call__wrapper">
-                <img class="card-img" :src="'http://localhost:5000' + productImg" alt="product image">
+                <img class="card-img" :src="`${backendUrl}${productImg}`" alt="product image">
                 <h1 class="get-call__title">{{ productTitle }}</h1>
             </figure>
             <h2 v-if="!isNumberReceived">Закажите обратный звонок</h2>
@@ -30,13 +30,14 @@ const props = defineProps({
     productImg: String
 })
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL
 const firstName = ref('')
 const phone = ref('')
 const isNumberReceived = ref(false)
 const modal = useModalStatesStore()
 
 const onSubmit = () => {
-    axios.post('http://localhost:5000/feedbackForms/create', {
+    axios.post(`${import.meta.env.VITE_BACKEND_URL}/feedbackForms/create`, {
         name: firstName.value,
         phone: phone.value,
         text: props.productTitle,
