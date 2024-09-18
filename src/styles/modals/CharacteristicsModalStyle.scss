@@ -1,0 +1,54 @@
+@import '../mixins';
+
+.characteristics-modal{
+  @include flexCol();
+  overflow-y: auto;
+  max-height: 80vh;
+  gap: 20px;
+  padding-bottom: 10px;
+
+  &::-webkit-scrollbar{
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb{
+    background-color: #E1E1E1;
+    border-radius: 16px;
+  }
+
+  &::-webkit-scrollbar-track{
+    background: #F9F9F9;
+    border-radius: 8px;
+    margin-top: 20px;
+    margin-bottom: 60px;
+  }
+}
+
+.characteristics-container{
+  @include flexCol();
+  gap: 15px;
+}
+
+.characteristics-card{
+  @include flexCol();
+  gap: 5px;
+}
+
+.characteristics-card p{
+  font-size: 18px;
+}
+
+.characteristics-modal button{
+  height: 40px;
+  background-color: #000000;
+  padding: 10px;
+  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.characteristics-modal button:active{
+  background-color: white;
+  color: black;
+}

@@ -18,8 +18,27 @@
   list-style: none;
 }
 .header-nav__item{
-
+  font-size: 20px;
 }
 .header-nav-link{
   cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .header{
+    height: 35px;
+  }
+
+  .header-nav__image{
+    width: 24px;
+    height: 24px;
+  }
+
+  .header-nav__list{
+
+  }
+
+  .header-nav__item{
+    font-size: 16px;
+  }
 }

@@ -1,0 +1,62 @@
+@import '../mixins';
+
+.get-call{
+  @include flexCol();
+  gap: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.get-call__text{
+    @include flexCol();
+    gap: 20px;
+  p{
+    font-size: 20px;
+  }
+  .get-call__wrapper{
+    @include flexRow();
+    gap: 20px;
+
+    .get-call__image{
+      width: 250px;
+      height: 300px;
+    }
+
+    .get-call__title{
+      padding-top: 40px;
+      padding-right: 20px;
+    }
+  }
+}
+
+.get-call__functional{
+
+  .get-call__form{
+    @include flexCol();
+    gap: 15px;
+
+    .get-call__input{
+      border: none;
+      outline: none;
+      border-radius: 4px;
+      height: 40px;
+      padding-left: 10px;
+      background-color: #efecec;
+    }
+
+    .get-call__button{
+      border-radius: 8px;
+      border: none;
+      height: 40px;
+      background-color: black;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .get-call__button:active{
+      background-color: white;
+      color: black;
+    }
+  }
+}

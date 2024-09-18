@@ -1,0 +1,154 @@
+@import '../mixins';
+
+.admin-page{
+  font-family: 'Poppins', sans-serif;
+}
+
+.admin-header{
+  @include flexCol();
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 20px;
+  padding-top: 10px;
+}
+
+.admin-header__nav-list{
+  @include flexRow();
+  gap: 300px;
+  list-style: none;
+}
+
+.admin-header__nav-item{
+  height: 40px;
+  background-color: #000000;
+  padding: 10px;
+  color: white;
+  border-radius: 12px;
+  width: 200px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.admin-header__nav-item:active{
+  background-color: white;
+  color: black;
+}
+
+.admin-page__feedback{
+  display: flex;
+  width: 100%
+}
+
+.feedback-table{
+  width: 100%;
+  margin-bottom: 20px;
+  border: 1px solid #dddddd;
+  border-collapse: collapse;
+}
+
+.feedback-table th{
+  font-weight: bold;
+  padding: 5px;
+  background: #efefef;
+  border: 1px solid #dddddd;
+}
+
+.feedback-table td{
+  border: 1px solid #dddddd;
+  padding: 5px;
+  text-align: center;
+}
+
+.feedback-form__btn{
+  cursor: pointer;
+}
+
+.admin-page__remove-products{
+  @include flexCol();
+  gap: 20px;
+}
+
+.characteristic-item{
+  @include flexCol();
+  padding-bottom: 10px;
+}
+
+.characteristics-button{
+  margin-top: 5px;
+  height: 40px;
+  background-color: #000000;
+  padding: 10px;
+  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.characteristics-button:active{
+  background-color: white;
+  color: black;
+}
+
+.remove-products__container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.admin-page__add-products{
+  display: flex;
+  justify-content: center;
+  padding-top: 30px;
+}
+
+.add-products__form{
+  @include flexCol();
+  gap: 30px;
+  width: 700px;
+  border: 2px solid black;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.products-form__container{
+  @include flexCol();
+  gap: 10px;
+}
+
+.products-form__input{
+  height: 35px;
+  border-radius: 12px;
+  border: 1px solid black;
+  padding-left: 10px;
+  width: 100%;
+  font-size: 14px;
+  padding-right: 5px;
+}
+
+.products-form__description-input{
+  padding-left: 10px;
+  padding-top: 5px;
+  font-size: 16px;
+}
+
+.products-form__characteristics-item{
+  @include flexRow();
+  align-items: center;
+  gap: 20px;
+}
+
+.add-products__form button{
+  margin-top: 5px;
+  height: 40px;
+  background-color: #000000;
+  padding: 10px;
+  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.add-products__form button:active{
+  background-color: white;
+  color: black;
+}

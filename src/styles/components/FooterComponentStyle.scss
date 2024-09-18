@@ -1,0 +1,96 @@
+@import '../mixins';
+
+.footer{
+  @include flexRow();
+  align-items: center;
+  justify-content: space-around;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+ .footer__main-info{
+    @include flexRow();
+    align-items: center;
+    gap: 20px;
+   .main-info__logo{
+     height: 64px;
+     width: 64px;
+   }
+   .main-info__text{
+
+   }
+ }
+
+ .footer__contacts{
+    @include flexCol();
+    gap: 15px;
+   .contacts__text{
+      font-size: 23px;
+   }
+ }
+
+ .contacts-list{
+   @include flexCol();
+   gap: 10px;
+ }
+
+ .contacts-phone{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+   .contacts-phone__icon{
+     height: 20px;
+     width: 20px;
+   }
+   .contacts-phone__text{
+     font-size: 23px;
+     font-weight: bold;
+     text-decoration: none;
+     color: black;
+   }
+ }
+
+ .contacts-email{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+   .contacts-email__icon{
+     height: 20px;
+     width: 20px;
+   }
+   .contacts-email__text{
+     font-size: 18px;
+     font-weight: bolder;
+     text-decoration: none;
+     color: black;
+   }
+ }
+
+ .contacts-address{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+   .contacts-address__icon{
+     height: 20px;
+     width: 20px;
+   }
+   .contacts-address__text{
+     font-size: 18px;
+     text-decoration: none;
+     color: black;
+   }
+ }
+
+@media (max-width: 480px) {
+  .footer{
+    @include flexCol();
+    padding: 10px 20px;
+  }
+  .footer__main-info{
+    width: 100%;
+    justify-content: space-between;
+    .main-info__logo{
+      height: 48px;
+      width: 48px;
+    }
+  }
+}

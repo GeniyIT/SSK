@@ -1,0 +1,71 @@
+@import '../mixins';
+
+.feedback-form{
+  @include flexCol();
+  margin: 0 auto;
+  width: 600px;
+  gap: 5px;
+  padding-bottom: 10px;
+}
+
+.feedback-form__form{
+  @include flexCol();
+  gap: 5px;
+}
+
+.feedback-form__input{
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  height: 40px;
+  padding-left: 10px;
+}
+
+.input__text{
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  padding-left: 10px;
+  padding-top: 5px;
+}
+
+.feedback-form__button{
+  border-radius: 8px;
+  border: none;
+  height: 40px;
+  background-color: orangered;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+.feedback-form__button:active{
+  background-color: black;
+}
+
+.feedback-form__title{
+  text-align: center;
+  font-size: 48px;
+  color: white;
+  padding-bottom: 50px;
+  padding-top: 30px;
+}
+
+@media (max-width: 480px) {
+  .feedback-form{
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100%;
+  }
+
+  .feedback-form__input{
+    height: 30px;
+  }
+
+  .feedback-form__button{
+    height: 30px;
+  }
+
+  .feedback-form__title{
+    font-size: 32px;
+  }
+}

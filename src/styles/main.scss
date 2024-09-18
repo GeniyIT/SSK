@@ -1,13 +1,32 @@
+@font-face {
+  font-family: Poppins;
+  src: local('Poppins-Regular'), local('@/fonts/Poppins-Regular');
+}
+
 *{
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
 // Импорты стилей для блоков
-@import '@/styles/Components/HeaderComponent.scss';
+@import '@/styles/components/HeaderComponentStyle';
+@import '@/styles/components/FooterComponentStyle';
+@import '@/styles/components/CardComponentStyle';
+@import '@/styles/components/FeedbackFormComponentStyle';
+@import '@/styles/components/ModalWindowComponentStyle';
+@import '@/styles/components/AboutUsComponentStyle';
 
 // импорты стилей для страниц
-@import '@/styles/PagesStyles/MainPage.scss';
+@import '@/styles/PagesStyles/MainPageStyle';
+@import '@/styles/PagesStyles/LoginPageStyle';
+@import '@/styles/PagesStyles/AdminPageStyle';
+@import '@/styles/PagesStyles/ProductsPageStyle';
+
+//импорты стилей для модалок
+@import '@/styles/modals/GetPriceModalStyle';
+@import '@/styles/modals/CharacteristicsModalStyle';
+@import '@/styles/modals/ChangePasswordModalStyle';
 
 // Импорты стилей для UI компонентов
