@@ -1,7 +1,7 @@
 <template>
     <body class="main-page">
         <AboutUsComponent/>
-        <CardComponent/>
+        <CardComponent :isAdminPanel="false" :isMainPage="true" :searchUi="false"/>
         <FeedbackFormComponent/>
     </body>
 </template>

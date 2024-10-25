@@ -1,7 +1,7 @@
 <template>
     <div class="footer">
         <div class="footer__main-info">
-            <img class="main-info__logo" src="@/assets/icon/logo_SpetsServisKar-2.png" alt="">
+            <img class="main-info__logo" src="/src/assets/images/logo_v.png" alt="">
             <h2 class="main-info__text">ООО"СпецСервисКар"</h2>
         </div>
         <div class="footer__contacts">

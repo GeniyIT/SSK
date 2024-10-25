@@ -4,11 +4,16 @@
             <h1 class="admin-header__title">Админ панель</h1>
             <nav class="admin-header__nav">
                 <ul class="admin-header__nav-list">
-                    <li class="admin-header__nav-item" @click="buttonHandler('feedback')"><a class="admin-header__nav-button-">Обратная связь</a></li>
-                    <li class="admin-header__nav-item" @click="buttonHandler('removeProducts')"><a class="admin-header__nav-button-">Удаление товаров</a></li>
-                    <li class="admin-header__nav-item" @click="buttonHandler('addProducts')"><a class="admin-header__nav-button-">Добавление товаров</a></li>
-                    <li class="admin-header__nav-item" @click="modalStates.ModalToggle('changePassword')"><a class="admin-header__nav-button-">Сменить пароль</a></li>
-                    <li class="admin-header__nav-item" @click="buttonHandler('exit')"><a class="admin-header__nav-button-">Выход</a></li>
+                    <li class="admin-header__nav-item" @click="buttonHandler('feedback')"><a
+                            class="admin-header__nav-button-">Обратная связь</a></li>
+                    <li class="admin-header__nav-item" @click="buttonHandler('removeProducts')"><a
+                            class="admin-header__nav-button-">Удаление товаров</a></li>
+                    <li class="admin-header__nav-item" @click="buttonHandler('addProducts')"><a
+                            class="admin-header__nav-button-">Добавление товаров</a></li>
+                    <li class="admin-header__nav-item" @click="modalStates.ModalToggle('changePassword')"><a
+                            class="admin-header__nav-button-">Сменить пароль</a></li>
+                    <li class="admin-header__nav-item" @click="buttonHandler('exit')"><a
+                            class="admin-header__nav-button-">Выход</a></li>
                 </ul>
             </nav>
         </header>
@@ -16,40 +21,39 @@
         <div v-if="page === 'feedback'" class="admin-page__feedback">
             <table class="feedback-table">
                 <thead>
-                <tr>
-                    <th>Имя</th>
-                    <th>Телефон</th>
-                    <th>Email</th>
-                    <th>Текст</th>
-                    <th>Дата</th>
-                    <th>Статус</th>
-                </tr>
+                    <tr>
+                        <th>Имя</th>
+                        <th>Телефон</th>
+                        <th>Email</th>
+                        <th>Текст</th>
+                        <th>Дата</th>
+                        <th>Статус</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr v-for="feedback in allFeedback" :key="feedback.id">
-                    <td>{{ feedback.name }}</td>
-                    <td>{{ feedback.phone }}</td>
-                    <td>{{ feedback.email }}</td>
-                    <td>{{ feedback.text }}</td>
-                    <td>{{ feedback.date }}</td>
-                    <td class="feedback-form__btn" @click="isCheckReply(feedback.id, feedback.checkReply)">{{ feedback.checkReply ? 'Просмотренно' : 'Не просмотренно' }}</td>
-                </tr>
+                    <tr v-for="feedback in allFeedback" :key="feedback.id">
+                        <td>{{ feedback.name }}</td>
+                        <td>{{ feedback.phone }}</td>
+                        <td>{{ feedback.email }}</td>
+                        <td>{{ feedback.text }}</td>
+                        <td>{{ feedback.date }}</td>
+                        <td class="feedback-form__btn" @click="isCheckReply(feedback.id, feedback.checkReply)">{{
+                            feedback.checkReply ? 'Просмотренно' : 'Не просмотренно' }}</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
 
         <div v-if="page === 'removeProducts'" class="admin-page__remove-products">
-            <CardComponent
-                :isAdminPanel="true"
-                :searchUi="true"
-            />
+            <CardComponent :isAdminPanel="true" :searchUi="true" :isMainPage="false" />
         </div>
 
         <div v-if="page === 'addProducts'" class="admin-page__add-products">
             <form class="add-products__form" @submit.prevent="onSubmit">
                 <div class="products-form__container">
                     <h1>Введите название товара</h1>
-                    <input class="products-form__input" type="text" placeholder="Введите название товара" name="title" v-model="title">
+                    <input class="products-form__input" type="text" placeholder="Введите название товара" name="title"
+                        v-model="title">
                 </div>
 
                 <div class="products-form__container">
@@ -59,23 +63,34 @@
 
                 <div class="products-form__container">
                     <h1>Введите описание товара</h1>
-                    <textarea class="products-form__description-input" v-model="description" rows="5" placeholder="Введите описание товара" name="description"></textarea>
+                    <textarea class="products-form__description-input" v-model="description" rows="5"
+                        placeholder="Введите описание товара" name="description"></textarea>
                 </div>
 
                 <div class="products-form__container">
                     <h1>Характеристики товара</h1>
-                    <div v-for="(characteristic, index) in characteristics" :key="index" class="products-form__characteristics-item">
-                        <input class="products-form__input" type="text" placeholder="Название характеристики" v-model="characteristic.key" required>
-                        <input class="products-form__input" type="text" placeholder="Значение характеристики" v-model="characteristic.value" required>
-                        <button class="remove-characteristic-button" type="button" @click="removeCharacteristic(index)">Удалить</button>
+                    <div v-for="(characteristic, index) in characteristics" :key="index"
+                        class="products-form__characteristics-item">
+                        <input class="products-form__input" type="text" placeholder="Название характеристики"
+                            v-model="characteristic.key" required>
+                        <input class="products-form__input" type="text" placeholder="Значение характеристики"
+                            v-model="characteristic.value" required>
+                        <button class="remove-characteristic-button" type="button"
+                            @click="removeCharacteristic(index)">Удалить</button>
                     </div>
-                    <button class="products-form__characteristics-button" type="button" @click="addCharacteristic">Добавить характеристику</button>
+                    <button class="products-form__characteristics-button" type="button"
+                        @click="addCharacteristic">Добавить характеристику</button>
                 </div>
 
                 <div class="products-form__container">
                     <h1>Введите цену товара</h1>
-                    <input class="products-form__input" type="number" placeholder="Введите цену товара" name="price" v-model="price">
+                    <input class="products-form__input" type="number" placeholder="Введите цену товара" name="price"
+                        v-model="price">
                 </div>
+                <select class="products-form__select" name="select" v-model="selectedProductType">
+                    <option value="product">Товар</option>
+                    <option value="Part">Запчасть</option>
+                </select>
                 <button class="products-form__submit-button" type="submit">Добавить товар</button>
             </form>
         </div>
@@ -83,16 +98,16 @@
 
     <teleport to="body">
         <ModalWindowComponent v-if="modalStates.ModalStatus === 'changePassword'">
-            <ChangePasswordModal/>
+            <ChangePasswordModal />
         </ModalWindowComponent>
     </teleport>
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
 import axios from "axios";
 import CardComponent from "@/components/CardComponent.vue";
-import {useModalStatesStore} from "@/Store/modalStates.js";
+import { useModalStatesStore } from "@/Store/modalStates.js";
 import ModalWindowComponent from "@/components/ModalWindowComponent.vue";
 import ChangePasswordModal from "@/modals/ChangePasswordModal.vue";
 import router from "@/router/index.js";
@@ -103,6 +118,7 @@ const imageFile = ref(null)
 const description = ref('')
 const characteristics = ref([{ key: '', value: '' }])
 const price = ref(0)
+const selectedProductType = ref('product')
 
 const allProducts = ref([])
 const allFeedback = ref([])
@@ -189,32 +205,62 @@ const getProducts = async () => {
 }
 
 const onSubmit = async () => {
-    const formData = new FormData()
-    formData.append('image', imageFile.value)
+    try {
+        const formData = new FormData()
+        formData.append('image', imageFile.value)
 
-    const responseImage = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/upload/image`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
-    })
-    imageFile.value = responseImage.data.path
+        const responseImage = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/upload/image`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        imageFile.value = responseImage.data.path
+        console.log('картинка загружена');
+
+
+    } catch (error) {
+        console.error('Ошибка при загрузке изображения:', error)
+    }
 
     const characteristicsArray = characteristics.value.map(char => `${char.key}: ${char.value}`)
-
     try {
-        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/products/add`, {
+        if (selectedProductType.value === 'product') {
+            console.log('Товар добавлен');
+
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/products/add`, {
                 title: title.value,
                 imageUrl: imageFile.value,
                 description: description.value,
                 characteristics: characteristicsArray,
                 price: price.value
             },
-            {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
-            })
+                {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token')
+                    }
+                })
+        }
+        else if (selectedProductType.value === 'Part') {
+            console.log('Part добавлен');
+
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/product/part/`, {
+
+                title: title.value,
+                imageUrl: imageFile.value,
+                description: description.value,
+                characteristics: characteristicsArray,
+                price: price.value
+
+            },
+                {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token')
+                    }
+                })
+        }
         resetForm()
+
+        console.log('Успех');
     } catch (error) {
         if (error.response && error.response.data && error.response.status === 401) {
             console.error('Ошибка авторизации: токен недействителен или отсутствует')
@@ -242,7 +288,7 @@ const buttonHandler = (btnName) => {
         localStorage.removeItem('token')
         router.push('/login')
     }
-    else{
+    else {
         page.value = btnName
     }
 }
@@ -259,8 +305,8 @@ const isCheckReply = async (id, checkReplyStatus) => {
     if (!checkReplyStatus) {
         try {
             await axios.post(`${import.meta.env.VITE_BACKEND_URL}/feedbackForms/setReplyTrueForm`, {
-                    id: id
-                },
+                id: id
+            },
                 {
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -282,8 +328,8 @@ const isCheckReply = async (id, checkReplyStatus) => {
     else {
         try {
             await axios.post(`${import.meta.env.VITE_BACKEND_URL}/feedbackForms/setReplyFalseForm`, {
-                    id: id
-                },
+                id: id
+            },
                 {
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('token')

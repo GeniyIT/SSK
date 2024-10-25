@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <img class="header-nav__image" src="@/assets/icon/logo_SpetsServisKar-2.png" alt="">
+        <img class="header-nav__image" src="/src/assets/images/logo_g.png" alt="">
         <ul class="header-nav__list">
             <li class="header-nav__item" @click="goTo('/')"> <a class="header-nav-link">Главная</a> </li>
             <li class="header-nav__item" @click="goTo('/products')"> <a class="header-nav-link">Товары</a> </li>

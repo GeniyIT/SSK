@@ -5,8 +5,12 @@
             <input type="text" placeholder="Поиск по каталогу товаров" v-model="searchQuery">
         </div>
     </div>
-
-    <div class="card">
+    <div class="card-products__buttons-container" v-if="isMainPage === false">
+        <button class="card-products__button-product" :style="productButtonStyle"
+            @click="isPart = false">Продукты</button>
+        <button class="card-products__button-part" :style="partButtonStyle" @click="isPart = true">Запчасти</button>
+    </div>
+    <div class="card" v-if="isPart === false">
         <div class="card-wrapper" v-for="product in filteredProducts" :key="product.id">
             <figure class="card-image">
                 <img class="card-img" :src="`${backendUrl}${product.imageUrl}`" alt="product image">
@@ -16,9 +20,32 @@
             <div class="card-price">
                 <h3 class="card-price__text">Цена: от {{ product.price }} ₽</h3>
                 <div class="card-price__button">
-                    <button v-if="!isAdminPanel" class="card-price__button-price" @click="openModal('getPrice', product)">Уточнить цену</button>
-                    <button v-if="isAdminPanel" class="card-price__button-remove" @click="removeProducts(product.id)">Удалить товар</button>
-                    <button class="card-price__button-characteristics" @click="openModal('characteristics', product)">Характеристики</button>
+                    <button v-if="!isAdminPanel" class="card-price__button-price"
+                        @click="openModal('getPrice', product)">Уточнить цену</button>
+                    <button v-if="isAdminPanel" class="card-price__button-remove"
+                        @click="removeProducts(product.id)">Удалить товар</button>
+                    <button class="card-price__button-characteristics"
+                        @click="openModal('characteristics', product)">Характеристики</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card" v-if="isPart === true">
+        <div class="card-wrapper" v-for="product in filteredProducts" :key="product.id">
+            <figure class="card-image">
+                <img class="card-img" :src="`${backendUrl}${product.imageUrl}`" alt="product image">
+            </figure>
+            <h3 class="card-title">{{ product.title }}</h3>
+            <div class="card-description">{{ product.description }}</div>
+            <div class="card-price">
+                <h3 class="card-price__text">Цена: от {{ product.price }} ₽</h3>
+                <div class="card-price__button">
+                    <button v-if="!isAdminPanel" class="card-price__button-price"
+                        @click="openModal('getPrice', product)">Уточнить цену</button>
+                    <button v-if="isAdminPanel" class="card-price__button-remove"
+                        @click="removeProducts(product.id)">Удалить товар</button>
+                    <button class="card-price__button-characteristics"
+                        @click="openModal('characteristics', product)">Характеристики</button>
                 </div>
             </div>
         </div>
@@ -26,18 +53,13 @@
 
     <Teleport to="body">
         <ModalWindowComponent v-if="modalStates.ModalStatus === `getPrice${currentProductId}`">
-            <GetPriceModal
-                :product-title="currentProduct.title"
-                :product-img="currentProduct.imageUrl"
-            />
+            <GetPriceModal :product-title="currentProduct.title" :product-img="currentProduct.imageUrl" />
         </ModalWindowComponent>
     </Teleport>
 
     <Teleport to="body">
         <ModalWindowComponent v-if="modalStates.ModalStatus === `characteristics${currentProductId}`">
-            <CharacteristicsModal
-                :characteristics="currentProduct.characteristics"
-            />
+            <CharacteristicsModal :characteristics="currentProduct.characteristics" />
         </ModalWindowComponent>
     </Teleport>
 </template>
@@ -56,12 +78,35 @@ const modalStates = useModalStatesStore()
 const currentProductId = ref(null)
 const currentProduct = ref({})
 const allProducts = ref([])
+const allPart = ref([])
 const searchQuery = ref('')
+const isPart = ref(false)
 
 const props = defineProps({
     isAdminPanel: Boolean,
-    searchUi: Boolean
+    searchUi: Boolean,
+    isMainPage: Boolean
 })
+
+const productButtonStyle = computed(() => {
+    return isPart.value
+        ? {}
+        : {
+            backgroundColor: 'white',
+            color: 'black',
+            border: '1px solid black',
+        };
+});
+
+const partButtonStyle = computed(() => {
+    return isPart.value
+        ? {
+            backgroundColor: 'white',
+            color: 'black',
+            border: '1px solid black',
+        }
+        : {};
+});
 
 const formatCharacteristics = (characteristicsArray) => {
     return characteristicsArray.map(characteristic => {
@@ -92,6 +137,23 @@ const getProducts = async () => {
     }
 }
 
+const getPart = async () => {
+    try {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/product/part/`)
+        allPart.value = await response.data.map(product => ({
+            ...product,
+            characteristics: formatCharacteristics(product.characteristics)
+        }));
+        if (router.currentRoute.value.path === '/') {
+            allPart.value = await response.data.slice(0, 5)
+        } else {
+            allPart.value = await response.data
+        }
+    } catch (error) {
+        console.error('Ошибка при загрузке данных:', error)
+    }
+}
+
 const openModal = (name, product) => {
     currentProductId.value = product.id
     currentProduct.value = product
@@ -103,37 +165,93 @@ const openModal = (name, product) => {
 }
 
 const removeProducts = async (id) => {
-    try {
-        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/products/remove`, {
-            idProduct: id
-        }, {
-            headers: {
-                Authorization: 'Bearer ' + localStorage.getItem('token')
+    if (isPart.value === false) {
+        try {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/products/remove`, {
+                idProduct: id
+            }, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+            await getProducts()
+        } catch (error) {
+            if (error.response && error.response.data && error.response.status === 401) {
+                console.error('Ошибка авторизации: токен недействителен или отсутствует')
+                localStorage.removeItem('token')
+                await router.push('/login')
             }
-        })
-        await getProducts()
-    } catch (error) {
-        if (error.response && error.response.data && error.response.status === 401) {
-            console.error('Ошибка авторизации: токен недействителен или отсутствует')
-            localStorage.removeItem('token')
-            await router.push('/login')
+            else {
+                console.error('Произошла ошибка:', error)
+            }
         }
-        else {
-            console.error('Произошла ошибка:', error)
+    }
+    else if (isPart.value === true) {
+        try {
+            await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/product/part/`, {
+                data: {
+                    id: id
+                },
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+            }
+
+            )
+            await getPart()
+        } catch (error) {
+            if (error.response && error.response.data && error.response.status === 401) {
+                console.error('Ошибка авторизации: токен недействителен или отсутствует')
+                localStorage.removeItem('token')
+                await router.push('/login')
+            }
+            else {
+                console.error('Произошла ошибка:', error)
+            }
         }
     }
 }
 
 const filteredProducts = computed(() => {
-    if (!searchQuery.value) {
-        return allProducts.value
+    if (props.isMainPage) {
+        const recentProducts = allProducts.value.slice(-5);
+        const recentParts = allPart.value.slice(-5);
+        const combined = [...recentProducts, ...recentParts]
+        return combined;
     }
-    return allProducts.value.filter(product =>
-        product.title.toLowerCase().includes(searchQuery.value.toLowerCase())
-    )
+    else if (!props.isMainPage) {
+        if (!searchQuery.value) {
+            if (isPart.value === false) {
+                return allProducts.value
+            }
+            else if (isPart.value === true) {
+                return allPart.value
+            }
+            else {
+                return console.log('Ошибка получения товаров или запчастей')
+            }
+
+        }
+        else if (isPart.value === false) {
+            return allProducts.value.filter(product =>
+                product.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+            )
+        } else if (isPart.value === true) {
+            return allPart.value.filter(product =>
+                product.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+            )
+        } else {
+            return console.log('Ошибка фильтрации товаров или запчастей')
+        }
+    }
+    else {
+        console.log('Ошибка MainPage filter');
+    }
+
 })
 
-onMounted(async () => {
-    await getProducts()
+onMounted(() => {
+    getProducts()
+    getPart()
 })
 </script>
